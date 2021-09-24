@@ -1,0 +1,36 @@
+CREATE PROCEDURE `sp_displayFC_wrong`()
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+/* query 1   */
+SELECT 
+    id,
+    first_name,
+    middle_name,
+    last_name,
+    birth_date,
+    email,
+    joining_date
+FROM
+    fellowship_candidates;
+    
+/* query 2 */
+SELECT COUNT(id) from felloship_candidates;
+
+ COMMIT;
+ END

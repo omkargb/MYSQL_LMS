@@ -1,0 +1,26 @@
+CREATE PROCEDURE `sp_display_ismpraful_info`()
+BEGIN
+DECLARE exit handler for sqlexception
+   BEGIN
+     -- ERROR
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+     -- WARNING
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+
+/* Query 1 */
+SELECT date_time, boot_time, files_changed
+FROM temporary_mis
+WHERE user_name='ismpraful@gmail.com' && cpu_percent>52;
+
+/* Query 2 */
+SELECT COUNT(user_name) from temporary_mis WHERE user_name LIKE 'ismpraful%';
+ 
+ COMMIT;
+END
