@@ -1,0 +1,16 @@
+/* create */
+
+DELIMITER //
+CREATE FUNCTION get_joining_date(inputid int(5))
+RETURNS varchar(255)
+DETERMINISTIC
+    BEGIN
+    DECLARE join_date varchar(128);
+    Select joining_date into join_date FROM fellowship_candidates where id = inputid;
+    return join_date;
+    END //
+DELIMITER ; 
+
+
+/* execute */
+SELECT id,first_name,last_name,get_joining_date(id)	FROM	fellowship_candidates;
