@@ -1,0 +1,33 @@
+/* write */
+CREATE PROCEDURE `sp_change_user_info`(in inputid int, in inputpass varchar(16))
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+ 
+ /* query 1 */
+UPDATE user_details SET password=inputpass,verified=1 WHERE id=inputid;
+	SELECT 'user password changed. Verification done.';
+
+ COMMIT;
+ 
+ END
+
+
+/* calling and execute */
+call sp_change_user_info(1,'mypass@123');
+call sp_change_user_info(2,'pa$$@987');

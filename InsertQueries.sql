@@ -3,9 +3,14 @@ INSERT INTO fellowship_candidates
  VALUES (1,'deepak','Kiran','Patil','deepak.63584@gmail.com ',8956748596,'Pune','2019-12-13 00:00:00','B.E',75.25,5245,5478,'Mumbai','Good','Good','Good','1999-12-13',1,'Kiran','Farmer',7584962547,300000,'Pune','Pune','photo_path','2019-12-13','Good',1,1,1,'Correct','Good',NULL,1);
 
  INSERT INTO fellowship_candidates
- VALUES (2,'Arun','Deepak','Roy','Arundr@gmail.com ',8889996660,'Mumbai','2018-11-05 00:00:00','B.E',79.35,5289,5436,'Pune','Good','Good','Good','1998-07-18',1,'Ketan','Farmer',77774441112,250000,'Mumbai','Mumbai','Codeme','2018-11-05','Good',1,1,1,'Correct','Good',NULL,1);
+ VALUES (2,'Arun','Deepak','Roy','Arundr@gmail.com',8889996660,'Mumbai','2018-11-05 00:00:00','B.E',79.35,5289,5436,'Pune','Good','Good','Good','1998-07-18',1,'Ketan','Farmer',77774441112,250000,'Mumbai','Mumbai','Codeme','2018-11-05','Good',1,1,1,'Correct','Good',NULL,1);
 
 
+ INSERT INTO user_details VALUES
+(1,'deepak.63584@gmail.com','deepak','Patil','deepak63584',8956748596,1),
+(2,'Arundr@gmail.com','Arun','Roy','Arundr999',8889996660,1);
+
+ 
 /* loading/import csv file into table */
 LOAD DATA LOCAL INFILE 'G:\BRIDGELABZ\086\LMSDB\CpuLogData20191117.csv' 
 INTO TABLE temporary_MIS 

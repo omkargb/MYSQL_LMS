@@ -1,0 +1,30 @@
+/* related to program */
+SELECT id, CONCAT(first_name, " ", middle_name, " ", last_name) AS FullName
+FROM fellowship_candidates;
+
+SELECT MAX(cpu_working_Time) AS max_cpuWorkingTime,
+ MIN(cpu_working_Time) AS min_cpuWorkingTime,
+ AVG(cpu_working_Time) AS avg_cpuWorkingTime 
+FROM temporary_MIS;
+
+
+SELECT cpu_percent,
+CASE
+    WHEN cpu_percent> 80 THEN 'The cpu_percent is high.'
+    WHEN cpu_percent<80 THEN 'The cpu_percent is normal.'
+    ELSE 'The cpu_percent is low'
+END
+FROM temporary_MIS;
+
+
+/* date and time */
+SELECT CURDATE() as CUR_DATE , CURRENT_TIMESTAMP() as CURRENT_TIME_STAMP, 
+LOCALTIME() as LOCAL_TIME, LOCALTIMESTAMP() as LOCAL_TIME_STAMP,
+NOW() as now;
+
+SELECT SEC_TO_TIME(125) as seconds_to_min;
+
+/* system */
+SELECT SYSTEM_USER();
+SELECT VERSION();
+

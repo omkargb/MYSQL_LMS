@@ -1,0 +1,5 @@
+/* create */
+CREATE VIEW Personal_Info AS    
+SELECT first_name, middle_name,last_name,email,mobile_num,birth_date
+FROM fellowship_candidates; 
+

@@ -1,0 +1,29 @@
+CREATE PROCEDURE `sp_update_field`()
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+ 
+/* query 1   */
+UPDATE fellowship_candidates SET photo_path = 'Path/to/myphoto.jpg' WHERE id = 1;
+ 
+/* query 2 */
+/* view data after updation */
+select id,first_name,last_name,photo_path from fellowship_candidates;
+ 
+ COMMIT;
+ END

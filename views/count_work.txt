@@ -1,0 +1,6 @@
+CREATE VIEW count_work AS 
+select  count( distinct user_name) as Count_of_user_names, count(distinct technology) as Count_of_technologies
+FROM temporary_MIS; 
+
+
+SELECT * FROM count_work;

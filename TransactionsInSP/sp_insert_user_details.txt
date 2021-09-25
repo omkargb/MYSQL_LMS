@@ -1,0 +1,32 @@
+/* write */
+CREATE PROCEDURE `sp_insert_user_details`()
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ START TRANSACTION;
+/* query 1 */
+ ALTER TABLE user_details MODIFY password varchar(24) default 'default#999';
+ 
+/* query 2   */
+INSERT INTO user_details(id,email, first_name, last_name, contact_number) 
+SELECT id,email, first_name, last_name, mobile_num FROM fellowship_candidates;
+ 
+ COMMIT;
+ END
+
+
+/* call and execute */
+CALL sp_insert_user_details();

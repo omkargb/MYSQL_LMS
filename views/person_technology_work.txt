@@ -1,0 +1,12 @@
+/* create */
+
+CREATE VIEW person_technology_work AS    
+SELECT DISTINCT user_name, technology
+FROM temporary_MIS; 
+
+/* execute */
+
+SELECT * FROM person_technology_work;
+
+/* drop view */
+DROP VIEW person_technology_work;
