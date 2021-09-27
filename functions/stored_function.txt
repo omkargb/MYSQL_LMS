@@ -1,0 +1,20 @@
+/* write */
+
+DELIMITER $$
+CREATE FUNCTION company_count_by_location(inlocation varchar(16)) 
+RETURNS INTEGER
+  DETERMINISTIC
+  BEGIN
+    DECLARE c_count INTEGER;
+    SELECT COUNT(location)
+    INTO c_count
+    FROM company co
+    WHERE co.location = inlocation
+    GROUP BY location;
+    RETURN c_count;
+END$$
+DELIMITER ;
+
+
+/* calling a function */
+select distinct company_count_by_location('Mumbai') from company;

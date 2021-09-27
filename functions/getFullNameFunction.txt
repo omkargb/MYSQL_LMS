@@ -1,0 +1,13 @@
+/* creating function */
+
+CREATE FUNCTION `get_full_name`(inputid int(5)) RETURNS varchar(255) 
+    DETERMINISTIC
+BEGIN
+    DECLARE full_name varchar(128);
+    Select CONCAT(first_name, " ", middle_name, " ", last_name) into full_name FROM fellowship_candidates where id = inputid;
+    return full_name;
+    END
+
+/* calling a function */
+
+select get_full_name(id) as full_name from fellowship_candidates where id=3;

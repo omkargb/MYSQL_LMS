@@ -1,0 +1,34 @@
+/* creating a PROCEDURE  */
+
+CREATE PROCEDURE `sp_view_inside`()
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+
+/* query 1   */
+select * from personal_info;
+
+/* query 2   */
+select * from count_work;
+
+ COMMIT;
+ END
+
+/* calling a PROCEDURE  */
+
+call sp_view_inside();

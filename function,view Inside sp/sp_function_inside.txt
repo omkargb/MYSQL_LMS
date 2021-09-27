@@ -1,0 +1,33 @@
+/* create PROCEDURE */
+
+CREATE  PROCEDURE `sp_function_inside`(in inputid int)
+    DETERMINISTIC
+BEGIN
+ 
+ DECLARE exit handler for sqlexception
+   BEGIN
+	-- error
+	SELECT 'SQL error occured : Rollback transaction';
+   ROLLBACK;
+ END;
+   
+ DECLARE exit handler for sqlwarning
+  BEGIN
+	-- WARNING
+	SELECT 'SQL warning : Rollback transaction';
+  ROLLBACK;
+ END;
+ 
+ START TRANSACTION;
+/* query 1   */
+SELECT id, get_full_name(id) as full_name, birth_date, mobile_num 
+FROM	fellowship_candidates
+WHERE id=inputid;
+    
+ COMMIT;
+ END
+
+
+/* calling PROCEDURE  */
+
+call sp_function_inside(3);
