@@ -1,0 +1,19 @@
+
+/* Range partiton example */
+
+CREATE TABLE hired_candidate 
+(
+id INT NOT NULL AUTO_INCREMENT,	first_name VARCHAR(24),		last_name VARCHAR(24),
+degree VARCHAR(24),		mobile_num BIGINT(10),		hired_date datetime,	pincode INT(6),
+KEY id (id)
+)
+PARTITION BY RANGE (TO_DAYS(hired_date)) (
+PARTITION p0_month6 VALUES LESS THAN (TO_DAYS('2021-06-30')),
+PARTITION p1_month7 VALUES LESS THAN (TO_DAYS('2021-07-30')),
+PARTITION p2_month8 VALUES LESS THAN (TO_DAYS('2021-08-30')),
+PARTITION p2_month9 VALUES LESS THAN (TO_DAYS('2021-09-30'))
+);
+
+
+
+desc lms.hired_candidate;

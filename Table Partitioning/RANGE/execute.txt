@@ -1,0 +1,26 @@
+/* check created partitions */
+
+mysql> EXPLAIN select * from lms.hired_candidate;
++----+-------------+-----------------+-----------------------------------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table           | partitions                              | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+-----------------+-----------------------------------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | hired_candidate | p0_month6,p1_month7,p2_month8,p2_month9 | ALL  | NULL          | NULL | NULL    | NULL |    1 |   100.00 | NULL  |
++----+-------------+-----------------+-----------------------------------------+------+---------------+------+---------+------+------+----------+-------+
+
+
+/* execute command to check data in which parition */
+
+
+mysql> EXPLAIN SELECT * FROM lms.hired_candidate WHERE hired_date = '2021-06-05';
++----+-------------+-----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table           | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | hired_candidate | p0_month6  | ALL  | NULL          | NULL | NULL    | NULL |    1 |   100.00 | Using where |
++----+-------------+-----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+
+
+EXPLAIN SELECT * FROM lms.hired_candidate WHERE hired_date = '2021-07-19';
+--> partitions	|	p0_month7
+
+EXPLAIN SELECT * FROM lms.hired_candidate WHERE hired_date = '2021-08-18';
+--> partitions	|	p0_month8
