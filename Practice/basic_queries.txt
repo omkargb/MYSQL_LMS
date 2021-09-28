@@ -1,0 +1,17 @@
+use products;
+select * from products.product_info;
+select * from products.product_quantity;
+
+/* min max avg */
+select MIN(prod_price), MAX(prod_price), AVG(prod_price) from products.product_quantity;
+
+select prod_id,prod_price*prod_qty as totalPrice from products.product_quantity;
+
+/* having 
+The HAVING clause is used in the SELECT statement to specify filter conditions for a group of rows
+*/
+use products;
+SELECT prod_id, prod_size, prod_qty
+FROM product_quantity
+GROUP BY prod_size
+HAVING prod_qty > 10;

@@ -1,0 +1,39 @@
+/* create cursor */
+use lms;
+select * from lms.company;
+
+DELIMITER $$
+CREATE PROCEDURE sp_cursor_company_list (
+	INOUT company_list varchar(4000)
+)
+BEGIN
+	DECLARE finished INTEGER DEFAULT 0;
+	DECLARE companyName varchar(100) DEFAULT "";
+
+	-- declare cursor for employee email
+	DEClARE currCompany	CURSOR FOR 
+	SELECT name FROM lms.company;
+
+	-- declare NOT FOUND handler
+	DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET finished = 1;
+
+	OPEN currCompany;
+	getCompany: LOOP
+		FETCH currCompany INTO companyName;
+		IF finished = 1 THEN 
+			LEAVE getCompany;
+		END IF;
+		-- build company List, separate by comma
+		SET company_list = CONCAT(companyName,",",company_list);
+	END LOOP getCompany;
+	CLOSE currCompany;
+
+END$$
+DELIMITER ;
+
+/* calling a cursor */
+
+SET @company_list = ""; 
+CALL sp_cursor_company_list(@company_list); 
+SELECT @company_list;

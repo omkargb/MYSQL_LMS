@@ -1,0 +1,17 @@
+/* Index : 
+ It enables you to improve the faster retrieval of records on a database table.
+PRIMARY KEY - clustered index.
+
+*/
+
+use cpulogdata;
+
+EXPLAIN SELECT user_name FROM cpulogdata20191117 WHERE technology = 'java';  
+
+CREATE INDEX tech_index ON cpulogdata20191117 (technology (16));  
+
+SHOW INDEXES FROM cpulogdata20191117;  
+
+EXPLAIN SELECT user_name FROM cpulogdata20191117 WHERE technology = 'java';  
+
+

@@ -1,0 +1,64 @@
+--  sql joins implementation --
+create database products;
+use products;
+
+create table product_info(
+pid INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
+prod_brand varchar(16),		prod_name varchar(24)
+);
+
+select * from products.product_info ;
+
+insert into products.product_info (prod_brand,prod_name) 
+values ('parle','biscuit'), ('colgate','toothpaste'), ('amul','butter'),('dettol','soap'),
+('lays','chips'), ('maggi','noodles');
+insert into products.product_info (prod_brand,prod_name) 
+values ('cello','ballpen'), ('gokul','milk');
+
+create table product_quantity(
+id INT AUTO_INCREMENT PRIMARY KEY NOT NULL UNIQUE,
+prod_id INT NOT NULL,	prod_size varchar(24),
+prod_price int,	prod_qty int,
+CONSTRAINT fk_qty_prodid FOREIGN KEY(prod_id) REFERENCES product_info(pid)
+ON DELETE CASCADE  ON UPDATE CASCADE  
+);
+insert into products.product_quantity (prod_id,prod_size,prod_price,prod_qty) values
+(1,'500gm',20,20),	(2,'100gm',20,25),	(3,'250gm',40,10),
+(4,'100gm',40,30),	(5,'25gm',5,50),	(6,'250gm',40,50),
+(6,'100gm',15,NULL),	(1,'100gm',5,45),	(5,'100gm',20,NULL);
+
+select * from products.product_quantity;
+
+/* INNER JOIN 
+Return all rows from multiple tables where the join condition is met.
+*/
+
+select product_info.*, product_quantity.*
+from product_info INNER JOIN product_quantity
+ON product_info.pid = product_quantity.prod_id;
+
+/* left outer JOIN 
+Returns all rows from the left hand table specified in the ON condition 
+and only those rows from the other table where the join condition is matched.
+Where no matches have been found in the right table, NULL is returned.
+*/
+use products;
+select product_info.*, product_quantity.*
+from product_info LEFT JOIN product_quantity
+ON product_info.pid = product_quantity.prod_id;
+
+/* right outer JOIN 
+Returns all rows from the RIGHT-hand table specified in the ON condition 
+and only those rows from the other table where he join condition is matched.
+*/
+
+select product_info.*, product_quantity.*
+from product_info RIGHT JOIN product_quantity
+ON product_info.pid = product_quantity.prod_id;
+
+/* self JOIN 
+to join a table to itself as if the table were two tables;
+*/
+SELECT A.pid AS Product_id, B.prod_brand AS Product_brand, A.prod_name
+FROM product_info A, product_info B 
+WHERE A.prod_name<B.prod_name;

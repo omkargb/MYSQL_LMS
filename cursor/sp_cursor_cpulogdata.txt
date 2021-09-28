@@ -1,0 +1,31 @@
+/* create a cursor */
+use lms;
+select * from lms.temporary_mis;
+
+DELIMITER //
+CREATE PROCEDURE sp_cursor_cpulogdata (in intech varchar(16), inout email_list varchar(4096))
+BEGIN
+	DECLARE is_done INTEGER default 0;
+	DECLARE user_ids varchar(4096) default "";
+
+	DECLARE email_cursor CURSOR FOR 
+	select DISTINCT user_name from lms.temporary_mis where technology=intech;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
+	OPEN email_cursor;
+		get_list : LOOP
+		FETCH email_cursor INTO user_ids;
+		IF is_done =1 THEN LEAVE get_list;
+		END IF;
+		set email_list=CONCAT(user_ids,",",email_list);
+		END LOOP get_list;
+	CLOSE email_cursor;
+END
+//
+DELIMITER ;
+
+
+/* calling a cursor */
+SET @email_list ="";  
+CALL sp_cursor_cpulogdata('java',@email_list);  
+SELECT @email_list;  

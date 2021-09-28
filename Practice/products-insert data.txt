@@ -1,0 +1,34 @@
+create database products;
+
+use products;
+
+/* table 1 */
+
+create table product_info(
+pid INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
+prod_brand varchar(16),		prod_name varchar(24)
+);
+
+select * from products.product_info ;
+
+insert into products.product_info (prod_brand,prod_name) 
+values ('parle','biscuit'), ('colgate','toothpaste'), ('amul','butter'),('dettol','soap'),
+('lays','chips'), ('maggi','noodles');
+insert into products.product_info (prod_brand,prod_name) 
+values ('cello','ballpen'), ('gokul','milk');
+
+/* table 2 */
+
+create table product_quantity(
+id INT AUTO_INCREMENT PRIMARY KEY NOT NULL UNIQUE,
+prod_id INT NOT NULL,	prod_size varchar(24),
+prod_price int,	prod_qty int,
+CONSTRAINT fk_qty_prodid FOREIGN KEY(prod_id) REFERENCES product_info(pid) 
+);
+
+insert into products.product_quantity (prod_id,prod_size,prod_price,prod_qty) values
+(1,'500gm',20,20),	(2,'100gm',20,25),	(3,'250gm',40,10),
+(4,'100gm',40,30),	(5,'25gm',5,50),	(6,'250gm',40,50),
+(6,'100gm',15,NULL),	(1,'100gm',5,45),	(5,'100gm',20,NULL);
+
+select * from products.product_quantity;
