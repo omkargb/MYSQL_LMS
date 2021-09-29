@@ -1,0 +1,43 @@
+/* DATABASE BACKUP , RESTORE  */
+
+/* using administrator command prompt */
+
+
+/* BACKUP DATABASE - EXPORT SQL */
+
+C:\Windows\system32>
+
+C:\Windows\system32> CD C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+/* TABLE : cpulog_backup.sql */
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p cpulogdata > G:\db_backup\cpulog_backup.sql
+Enter password: ****
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
+
+
+/* RESTORE DATABASE - IMPORT SQL */
+
+C:\Windows\system32> CD C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+/* DB NAME : cpu_log_data  */
+
+mysql> use cpu_log_data
+Database changed
+
+mysql> show tables;
+Empty set (0.00 sec)
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p cpu_log_data < G:\db_backup\cpulog_backup.sql
+Enter password: ****
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
+
+mysql> show tables;
++------------------------+
+| Tables_in_cpu_log_data |
++------------------------+
+| cpulogdata20191117     |
++------------------------+
+1 row in set (0.00 sec)
