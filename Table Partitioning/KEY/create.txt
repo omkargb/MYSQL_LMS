@@ -1,0 +1,22 @@
+use lms;
+CREATE TABLE hired_candidate4
+(
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,	first_name VARCHAR(24),		last_name VARCHAR(24),
+degree VARCHAR(24),		mobile_num BIGINT(10),		hired_date datetime,	pincode INT(6),
+ KEY id (id,pincode)
+)
+PARTITION BY KEY()  
+PARTITIONS 3;  
+
+
+insert into lms.hired_candidate4(first_name,last_name,degree,mobile_num,hired_date,pincode) values
+('omkar','b','BE',7777888899,'2021-06-10',415605),
+('ravi','s','MSC',8855225588,'2021-07-15',282001),
+('riya','j','BE',9966336699,'2021-08-02',305001),
+('nita','d','BTECH',9876543210,'2021-05-23',560002),
+('tanvi','n','BSC',7412365478,'2021-08-18',282001),
+('raju','k','MSC',8527419630,'2021-07-19',560002),
+('harry','p','BE',7744112233,'2021-06-29',581301),
+('john','c','BTECH',8975642315,'2021-08-24',305001),
+('saina','h','MSC',7534218693,'2021-05-05',560002)
+;
