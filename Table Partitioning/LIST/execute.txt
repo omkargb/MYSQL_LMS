@@ -1,0 +1,24 @@
+/* execute command to check data in which parition */
+
+mysql> explain select * from lms.hired_candidate3 where pincode=305001;
+
++----+-------------+------------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table            | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+------------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | hired_candidate3 | p1_3x      | ALL  | NULL          | NULL | NULL    | NULL |    2 |    50.00 | Using where |
++----+-------------+------------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+
+
+explain select * from lms.hired_candidate3 where pincode=415605;
+
+-- > partitions		|	p2_4x      
+
+
+explain select * from lms.hired_candidate3 where pincode=560002;
+
+-- > partitions 	|	p3_5x      
+
+
+explain select * from lms.hired_candidate3 where pincode=560002 OR pincode=305001;
+
+-- > partitions 	|	p1_3x,p3_5x
