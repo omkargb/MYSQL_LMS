@@ -1,0 +1,51 @@
+
+mysql> EXPLAIN analyze select * from products.product_quantity ;
++--------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                          |
++--------------------------------------------------------------------------------------------------+
+| -> Table scan on product_quantity  (cost=1.15 rows=9) (actual time=0.081..0.097 rows=9 loops=1)  |
++--------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> EXPLAIN ANALYZE select product_info.*, product_quantity.*from product_info LEFT JOIN product_quantity ON product_info.pid = product_quantity.prod_id;
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN   |
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop left join  (cost=5.25 rows=12) (actual time=0.067..0.118 rows=11 loops=1)
+    -> Table scan on product_info  (cost=1.05 rows=8) (actual time=0.040..0.046 rows=8 loops=1)
+    -> Index lookup on product_quantity using fk_qty_prodid (prod_id=product_info.pid)  (cost=0.39 rows=2) (actual time=0.007..0.008 rows=1 loops=8)
+|
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+mysql> EXPLAIN ANALYZE SELECT * from product_info where prod_brand='amul';
++---------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                             |
++---------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (product_info.prod_brand = 'amul')  (cost=1.05 rows=1) (actual time=0.066..0.075 rows=1 loops=1)
+    -> Table scan on product_info  (cost=1.05 rows=8) (actual time=0.056..0.066 rows=8 loops=1)			      |
++---------------------------------------------------------------------------------------------------------------------+
+
+
+mysql> EXPLAIN ANALYZE SELECT * from product_info having prod_name like 'b%';
++--------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                      |
++--------------------------------------------------------------------------------------------------------------+
+| -> Filter: (product_info.prod_name like 'b%')  (cost=1.05 rows=8) (actual time=0.091..0.118 rows=3 loops=1)
+    -> Table scan on product_info  (cost=1.05 rows=8) (actual time=0.075..0.094 rows=8 loops=1)		       |
++--------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> use products; EXPLAIN ANALYZE SELECT pid,prod_brand FROM product_info UNION ALL SELECT prod_id,prod_size FROM product_quantity;
+Database changed
++------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                            |
++------------------------------------------------------------------------------------------------------------------------------------+
+| -> Append  (actual time=0.046..0.079 rows=17 loops=1)
+    -> Stream results  (cost=1.05 rows=8) (actual time=0.045..0.054 rows=8 loops=1)
+        -> Table scan on product_info  (cost=1.05 rows=8) (actual time=0.040..0.046 rows=8 loops=1)
+    -> Stream results  (cost=1.15 rows=9) (actual time=0.015..0.021 rows=9 loops=1)
+        -> Table scan on product_quantity  (cost=1.15 rows=9) (actual time=0.014..0.017 rows=9 loops=1)				     |
++------------------------------------------------------------------------------------------------------------------------------------+
