@@ -1,0 +1,22 @@
+/* single db dump */
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p --databases cpu_log_data --master-data > G:\db_backup\single_dbdump.db
+Enter password: ****
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
+
+
+/* all db dump */
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p --all-databases --master-data > G:\db_backup\all_dbdump.db
+Enter password: ****
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
+
+
+/* export to .xml file */
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p --xml -e "SELECT * FROM cpu_log_data.cpulogdata20191117" > g:\db_backup\culogdata.xml
+Enter password: ****
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
