@@ -1,0 +1,22 @@
+/* create trigger */
+
+DELIMITER //
+CREATE TRIGGER company_after_delete
+AFTER DELETE
+   ON company FOR EACH ROW
+BEGIN
+   -- Insert record into table
+   INSERT INTO company_trash(
+     company_id,
+     deleted_date)
+   VALUES
+   ( OLD.name,
+     localtime());
+END; //
+
+DELIMITER ;
+
+
+/* execute */
+
+delete from company where id=9;

@@ -1,0 +1,26 @@
+/* create trigger */ 
+
+use lms;
+ DELIMITER $$
+     create trigger beforeupdate
+     before update
+     on user_details
+     for each row
+     begin
+     declare error_message varchar(255);
+     set error_message=('Please enter password.');
+     if new.password='' then signal sqlstate '45000' set message_text=error_message;
+     end if;
+     end$$
+DELIMITER $$  
+
+/* 
+SIGNAL statement used to return an error or warning condition.
+45000 is a generic SQLSTATE value - unhandled user-defined exception.
+*/
+
+
+/* calling a trigger */
+
+mysql> UPDATE user_details SET password = '' WHERE id = 2;
+ERROR 1644 (45000): Please enter password.
