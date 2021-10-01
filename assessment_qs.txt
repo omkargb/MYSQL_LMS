@@ -1,0 +1,116 @@
+1] check mysql version
+
+mysql> SHOW VARIABLES LIKE "version%";
++-------------------------+------------------------------+
+| Variable_name           | Value                        |
++-------------------------+------------------------------+
+| version                 | 8.0.26                       |
+| version_comment         | MySQL Community Server - GPL |
+| version_compile_machine | x86_64                       |
+| version_compile_os      | Win64                        |
+| version_compile_zlib    | 1.2.11                       |
++-------------------------+------------------------------+
+5 rows in set (0.01 sec)
+
+mysql> select version();
++-----------+
+| version() |
++-----------+
+| 8.0.26    |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> status;
+--------------
+C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe  Ver 8.0.26 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+Connection id:          26
+Current database:       demo
+Current user:           root@localhost
+SSL:                    Cipher in use is TLS_AES_256_GCM_SHA384
+Using delimiter:        ;
+Server version:         8.0.26 MySQL Community Server - GPL
+Protocol version:       10
+Connection:             localhost via TCP/IP
+Server characterset:    utf8mb4
+Db     characterset:    utf8mb4
+Client characterset:    cp850
+Conn.  characterset:    cp850
+TCP port:               3306
+Binary data as:         Hexadecimal
+Uptime:                 1 day 18 hours 3 min 17 sec
+
+Threads: 4  Questions: 3297  Slow queries: 0  Opens: 607  Flush tables: 7  Open tables: 237  Queries per second avg: 0.021
+--------------
+
+__________________________________________________________________________________________________________________________
+
+
+2] add foreign key to exixting table
+mysql> create table animals (id int auto_increment primary key, type varchar(24));
+Query OK, 0 rows affected (2.46 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_demo |
++----------------+
+| animals        |
++----------------+
+1 row in set (0.02 sec)
+
+mysql> create table dogs (id int auto_increment primary key, breed varchar(24));
+Query OK, 0 rows affected (1.06 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_demo |
++----------------+
+| animals        |
+| dogs           |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> alter table dogs add column animal_id int ;
+Query OK, 0 rows affected (1.84 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dogs add FOREIGN KEY (animal_id) REFERENCES animals(id);
+Query OK, 0 rows affected (2.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc dogs;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int         | NO   | PRI | NULL    | auto_increment |
+| breed     | varchar(24) | YES  |     | NULL    |                |
+| animal_id | int         | YES  | MUL | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.02 sec)
+
+__________________________________________________________________________________________________________________________
+
+
+3] change password of user
+
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+Query OK, 0 rows affected (0.08 sec)
+
+__________________________________________________________________________________________________________________________
+
+
+4] implement join on 3 table 
+
+mysql> SELECT fc.first_name, fc.last_name,ud.password,ud.contact_number,ur.role_name
+FROM fellowship_candidates fc 
+LEFT JOIN user_details ud ON fc.id = ud.id
+INNER JOIN user_roles ur ON fc.id = ur.user_id;
+
++------------+-----------+------------+----------------+-----------+
+| first_name | last_name | password   | contact_number | role_name |
++------------+-----------+------------+----------------+-----------+
+| deepak     | Patil     | mypass@123 |     8956748596 | mentor    |
+| Arun       | Roy       | arundr@123 |     8889996660 | student   |
+| ramesh     | dubey     | NULL       |           NULL | student   |
++------------+-----------+------------+----------------+-----------+
+

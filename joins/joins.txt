@@ -1,3 +1,4 @@
+
 /* joins implementation */
 
 mysql> use lms;
