@@ -1,0 +1,31 @@
+/* joins implementation */
+
+mysql> use lms;
+> SELECT fc.first_name, fc.last_name,us.password,us.contact_number FROM fellowship_candidates fc INNER JOIN user_details us ON fc.id = us.id;
+Database changed
++------------+-----------+------------+----------------+
+| first_name | last_name | password   | contact_number |
++------------+-----------+------------+----------------+
+| deepak     | Patil     | mypass@123 |     8956748596 |
+| Arun       | Roy       | pa$$@987   |     8889996660 |
++------------+-----------+------------+----------------+
+
+mysql> SELECT fc.first_name, fc.last_name,us.password,us.contact_number FROM fellowship_candidates fc left outer JOIN user_details us ON fc.id = us.id;
++------------+-----------+------------+----------------+
+| first_name | last_name | password   | contact_number |
++------------+-----------+------------+----------------+
+| deepak     | Patil     | mypass@123 |     8956748596 |
+| Arun       | Roy       | pa$$@987   |     8889996660 |
+| ramesh     | dubey     | NULL       |           NULL |
++------------+-----------+------------+----------------+
+
+/* self join */
+
+mysql> SELECT f1.first_name, f1.last_name,f2.hired_city,f2.birth_date FROM fellowship_candidates f1 ,fellowship_candidates f2 WHERE f1.id = f2.id;
++------------+-----------+------------+------------+
+| first_name | last_name | hired_city | birth_date |
++------------+-----------+------------+------------+
+| deepak     | Patil     | Pune       | 1999-12-13 |
+| Arun       | Roy       | Mumbai     | 1998-07-18 |
+| ramesh     | dubey     | Mumbai     | 1997-05-28 |
++------------+-----------+------------+------------+
