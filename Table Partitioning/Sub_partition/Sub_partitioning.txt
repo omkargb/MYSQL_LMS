@@ -1,0 +1,121 @@
+/* create */
+
+create table log_subpart(user_name varchar(24), technology varchar(24), disc_write_count int)
+partition by RANGE (disc_write_count)
+subpartition by HASH (disc_write_count)
+( 
+partition P0_below70k VALUES LESS THAN (70000) 
+	( subpartition S0, subpartition s1),
+partition p1_below140k values less than (140000)
+	( subpartition s2, subpartition s3),
+partition p2_remain values less than maxvalue
+	( subpartition s4, subpartition s5)
+);
+
+
+/* insert data values */
+
+mysql> insert into log_subpart select user_name, technology, disk_write_count from temporary_mis order by disk_write_count;
+
+
+/* check partitions */
+
+mysql> explain select * from log_subpart \G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: log_subpart
+   partitions: P0_below70k_S0,P0_below70k_s1,p1_below140k_s2,p1_below140k_s3,p2_remain_s4,p2_remain_s5
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 1878
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.00 sec)
+
+
+mysql> SELECT PARTITION_NAME,SUBPARTITION_NAME,TABLE_ROWS
+    -> FROM INFORMATION_SCHEMA.PARTITIONS
+    -> WHERE TABLE_NAME = 'log_subpart';
++----------------+-------------------+------------+
+| PARTITION_NAME | SUBPARTITION_NAME | TABLE_ROWS |
++----------------+-------------------+------------+
+| P0_below70k    | S0                |        622 |
+| P0_below70k    | s1                |        605 |
+| p1_below140k   | s2                |        150 |
+| p1_below140k   | s3                |        126 |
+| p2_remain      | s4                |        190 |
+| p2_remain      | s5                |        185 |
++----------------+-------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> explain select * from log_subpart where disc_write_count<7000 ;
++----+-------------+-------------+-------------------------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions                    | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+-------------------------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | P0_below70k_S0,P0_below70k_s1 | ALL  | NULL          | NULL | NULL    | NULL | 1227 |    33.33 | Using where |
++----+-------------+-------------+-------------------------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from log_subpart where disc_write_count=8910 ;
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions     | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | P0_below70k_S0 | ALL  | NULL          | NULL | NULL    | NULL |  622 |    10.00 | Using where |
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+mysql> explain select * from log_subpart where disc_write_count=68705 ;
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions     | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | P0_below70k_s1 | ALL  | NULL          | NULL | NULL    | NULL |  605 |    10.00 | Using where |
++----+-------------+-------------+----------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+mysql> explain select * from log_subpart where disc_write_count=99112 ;
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions      | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | p1_below140k_s2 | ALL  | NULL          | NULL | NULL    | NULL |  150 |    10.00 | Using where |
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from log_subpart where disc_write_count=99023 ;
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions      | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | p1_below140k_s3 | ALL  | NULL          | NULL | NULL    | NULL |  126 |    10.00 | Using where |
++----+-------------+-------------+-----------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+mysql> explain select * from log_subpart where disc_write_count=256545 ;
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions   | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | p2_remain_s5 | ALL  | NULL          | NULL | NULL    | NULL |  185 |    10.00 | Using where |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from log_subpart where disc_write_count=333964 ;
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions   | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | p2_remain_s4 | ALL  | NULL          | NULL | NULL    | NULL |  190 |    10.00 | Using where |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+mysql> explain select * from log_subpart where disc_write_count=400800 ;
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions   | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | log_subpart | p2_remain_s4 | ALL  | NULL          | NULL | NULL    | NULL |  190 |    10.00 | Using where |
++----+-------------+-------------+--------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
