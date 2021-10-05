@@ -1,0 +1,150 @@
+/* 
+All logs data location : C:\ProgramData\MySQL\MySQL Server 8.0
+*/
+
+
+-- -- /* general log */ -- -- 
+
+-- Established client connections and statements executed from client
+
+mysql> show global variables like '%general%';
++------------------+--------------+
+| Variable_name    | Value        |
++------------------+--------------+
+| general_log      | ON           |
+| general_log_file | OMKAR-PC.log |
++------------------+--------------+
+2 rows in set (0.14 sec)
+
+
+-- enable  genaral logging
+
+mysql> SET global general_log = 0;
+
+
+-- change outut formatting 
+
+mysql> SET global log_output = 'table';
+Query OK, 0 rows affected (0.00 sec)
+
+/* general log is saved in 
+Log file : C:\ProgramData\MySQL\MySQL Server 8.0\Data\OMKAR-PC.log
+
+For csv file :
+File path : C:\ProgramData\MySQL\MySQL Server 8.0\Data\mysql\general_log.CSV
+*/
+
+-- general log table structure 
+
+mysql> desc mysql.general_log;
++--------------+-----------------+------+-----+----------------------+--------------------------------------------------+
+| Field        | Type            | Null | Key | Default              | Extra                                            |
++--------------+-----------------+------+-----+----------------------+--------------------------------------------------+
+| event_time   | timestamp(6)    | NO   |     | CURRENT_TIMESTAMP(6) | DEFAULT_GENERATED on update CURRENT_TIMESTAMP(6) |
+| user_host    | mediumtext      | NO   |     | NULL                 |                                                  |
+| thread_id    | bigint unsigned | NO   |     | NULL                 |                                                  |
+| server_id    | int unsigned    | NO   |     | NULL                 |                                                  |
+| command_type | varchar(64)     | NO   |     | NULL                 |                                                  |
+| argument     | mediumblob      | NO   |     | NULL                 |                                                  |
++--------------+-----------------+------+-----+----------------------+--------------------------------------------------+
+6 rows in set (0.00 sec)
+
+-- output sample 
+
+18:41.1	root[root] @ localhost [::1]	38	1	Query	select * from lms
+03:53.2	root[root] @ localhost [::1]	33	1	Quit	
+09:46.7	[root] @ localhost [::1]		41	1	Connect	root@localhost on  using SSL/TLS
+45:22.7	root[root] @ localhost [::1]	41	1	Query	SELECT *\nFROM INFORMATION_SCHEMA.PARTITIONS\nWHERE TABLE_NAME = 'log_subpart'
+58:21.2	root[root] @ localhost [::1]	41	1	Query	SELECT DATABASE()
+58:21.2	root[root] @ localhost [::1]	41	1	Init DB	cpulogdata
+28:34.8	root[root] @ localhost [::1]	45	1	Query	explain select * from log_subpart where disc_write_count=56822
+46:03.0	root[root] @ localhost [::1]	45	1	Query	desc mysql.general_log
+
+
+
+-- -- /* Slow query log */ -- -- 
+
+-- Queries that took more than defined seconds to execute
+
+mysql> show global variables like '%slow%';
++-----------------------------+-------------------+
+| Variable_name               | Value             |
++-----------------------------+-------------------+
+| log_slow_admin_statements   | OFF               |
+| log_slow_extra              | OFF               |
+| log_slow_replica_statements | OFF               |
+| log_slow_slave_statements   | OFF               |
+| slow_launch_time            | 2                 |
+| slow_query_log              | ON                |
+| slow_query_log_file         | OMKAR-PC-slow.log |
++-----------------------------+-------------------+
+
+
+-- -- /* Binary log */ -- --
+
+-- saves data changing statements
+
+mysql> show global variables like '%log_bin%';
++---------------------------------+---------------------------------------------------------------+
+| Variable_name                   | Value                                                         |
++---------------------------------+---------------------------------------------------------------+
+| log_bin                         | ON                                                            |
+| log_bin_basename                | C:\ProgramData\MySQL\MySQL Server 8.0\Data\OMKAR-PC-bin       |
+| log_bin_index                   | C:\ProgramData\MySQL\MySQL Server 8.0\Data\OMKAR-PC-bin.index |
+| log_bin_trust_function_creators | OFF                                                           |
+| log_bin_use_v1_row_events       | OFF                                                           |
++---------------------------------+---------------------------------------------------------------+
+
+mysql> show master logs;
++---------------------+-----------+-----------+
+| Log_name            | File_size | Encrypted |
++---------------------+-----------+-----------+
+| OMKAR-PC-bin.000001 |       179 | No        |
+| OMKAR-PC-bin.000002 |   2086212 | No        |
+| OMKAR-PC-bin.000003 |       179 | No        |
+| OMKAR-PC-bin.000004 |   2854128 | No        |
+| OMKAR-PC-bin.000005 |     31608 | No        |
+| OMKAR-PC-bin.000006 |    665225 | No        |
+| OMKAR-PC-bin.000007 |       179 | No        |
+| OMKAR-PC-bin.000008 |    229394 | No        |
++---------------------+-----------+-----------+
+
+-- -- /* Error log */ -- --
+
+-- saves start / stop / run details of mysql.
+
+mysql> show global variables like '%error%';
++-------------------------------+----------------------------------------+
+| Variable_name                 | Value                                  |
++-------------------------------+----------------------------------------+
+| binlog_error_action           | ABORT_SERVER                           |
+| log_error                     | .\OMKAR-PC.err                         |
+| log_error_services            | log_filter_internal; log_sink_internal |
+| log_error_suppression_list    |                                        |
+| log_error_verbosity           | 2                                      |
+| max_connect_errors            | 100                                    |
+| max_error_count               | 1024                                   |
+| performance_schema_error_size | 4946                                   |
+| replica_skip_errors           | OFF                                    |
+| slave_skip_errors             | OFF                                    |
++-------------------------------+----------------------------------------+
+
+/* type of log file */ 
+
+Omkar@Omkar-PC MINGW64 /c/ProgramData/MySQL/MySQL Server 8.0/Data
+$ file OMKAR-PC.err
+OMKAR-PC.err: ASCII text, with CRLF line terminators
+
+Omkar@Omkar-PC MINGW64 /c/ProgramData/MySQL/MySQL Server 8.0/Data
+$ file OMKAR-PC-slow.log
+OMKAR-PC-slow.log: ASCII text, with CRLF, LF line terminators
+
+Omkar@Omkar-PC MINGW64 /c/ProgramData/MySQL/MySQL Server 8.0/Data
+$ file OMKAR-PC-bin.000008
+OMKAR-PC-bin.000008: MySQL replication log, server id 1 MySQL V5+, server version 8.0.26
+
+Omkar@Omkar-PC MINGW64 /c/ProgramData/MySQL/MySQL Server 8.0/Data
+$ file OMKAR-Pc.log
+OMKAR-Pc.log: ASCII text
+
+
